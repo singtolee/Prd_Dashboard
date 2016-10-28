@@ -1,0 +1,717 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aomai Dashboard</title>
+
+  <!-- Material Design Theming -->
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+  <link rel="stylesheet" href="main.css">
+
+  <!-- Firebase -->
+  <!-- ***********************************************************************************************************************
+       * TODO(DEVELOPER): Paste the initialization snippet from: Firebase Console > Overview > Add Firebase to your web app. *
+       *********************************************************************************************************************** -->
+       <script src="https://www.gstatic.com/firebasejs/3.3.2/firebase.js"></script>
+                 <script>
+                   // Initialize Firebase
+                   var config = {
+                     apiKey: "AIzaSyCOL_GgaWIYbQAdSvZzF0RH9w8nnQRG_jU",
+                     authDomain: "aomai-f24a2.firebaseapp.com",
+                     databaseURL: "https://aomai-f24a2.firebaseio.com",
+                     storageBucket: "aomai-f24a2.appspot.com",
+                   };
+                   firebase.initializeApp(config);
+                   //load Supplers list
+                   /*
+                   var sel = document.getElementById('sup');
+                   var supplerRef = firebase.database().ref().child("users");
+                   supplerRef.on('child_added', snap => {
+                     var opt = document.createElement('option');
+                     opt.innerHTML = snap.val().name;
+                     opt.value = snap.key;
+                     sel.appendChild(opt);
+                   });
+                   */
+                 </script>
+
+  <script type="text/javascript">
+    /**
+     * Handles the sign in button press.
+     */
+    function toggleSignIn() {
+      if (firebase.auth().currentUser) {
+        // [START signout]
+        firebase.auth().signOut();
+        // [END signout]
+      } else {
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        if (email.length < 4) {
+          alert('Please enter an email address.');
+          return;
+        }
+        if (password.length < 4) {
+          alert('Please enter a password.');
+          return;
+        }
+        // Sign in with email and pass.
+        // [START authwithemail]
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // [START_EXCLUDE]
+          if (errorCode === 'auth/wrong-password') {
+            alert('Wrong password.');
+          } else {
+            alert(errorMessage);
+          }
+          console.log(error);
+          document.getElementById('quickstart-sign-in').disabled = false;
+          // [END_EXCLUDE]
+        });
+        // [END authwithemail]
+      }
+      document.getElementById('quickstart-sign-in').disabled = true;
+    }
+
+    function saveprd() {
+      var pid = document.getElementById('pID').value;
+      var pname = document.getElementById('pName').value;
+      var psub = document.getElementById('pSub').value;
+      var pprice = document.getElementById('pPrice').value;
+      var ppackinfo = document.getElementById('pPackageInfo').value;
+      var psuppler = document.getElementById('sup').value;
+
+      var isrefundable;
+      if(document.getElementById('r1').checked){
+        isrefundable = true;
+      }else {
+        isrefundable = false;
+      }
+
+      var pCS = document.getElementById('cs');
+      var eachCS = pCS.getElementsByTagName('li');
+      var cors = [];
+      for (var i = 0; i < eachCS.length; i++) {
+        cors.push(eachCS[i].innerHTML);
+      }
+
+      var pCSQty = document.getElementById('csQty');
+      var qtys = pCSQty.getElementsByTagName('li');
+      var num = [];
+      for (var i = 0; i < qtys.length; i++) {
+        num.push(qtys[i].innerHTML);
+      }
+
+      //var pCSQtyArray = Array.prototype.slice.call(pCSQty);
+
+      var cate = document.getElementById("categories").value;
+
+      var aurl = document.getElementById('pmain').innerHTML;
+      var burl = document.getElementById('p2').innerHTML;
+      var curl = document.getElementById('p3').innerHTML;
+      var durl = document.getElementById('p4').innerHTML;
+      var eurl = document.getElementById('p5').innerHTML;
+      var furl = document.getElementById('p6').innerHTML;
+      var gurl = document.getElementById('p7').innerHTML;
+      var hurl = document.getElementById('p8').innerHTML;
+
+      var iaurl = document.getElementById('pinfo1').innerHTML;
+      var iburl = document.getElementById('pinfo2').innerHTML;
+      var icurl = document.getElementById('pinfo3').innerHTML;
+      var idurl = document.getElementById('pinfo4').innerHTML;
+      var ieurl = document.getElementById('pinfo5').innerHTML;
+      var ifurl = document.getElementById('pinfo6').innerHTML;
+      var igurl = document.getElementById('pinfo7').innerHTML;
+      var ihurl = document.getElementById('pinfo8').innerHTML;
+
+      var carousels = [aurl];
+      var infoimgs = [];
+
+      if(iaurl != "url") {
+        infoimgs.push(iaurl);
+      }
+
+      if(iburl != "url") {
+        infoimgs.push(iburl);
+      }
+      if(icurl != "url") {
+        infoimgs.push(icurl);
+      }
+      if(idurl != "url") {
+        infoimgs.push(idurl);
+      }
+      if(ieurl != "url") {
+        infoimgs.push(ieurl);
+      }
+      if(ifurl != "url") {
+        infoimgs.push(ifurl);
+      }
+      if(igurl != "url") {
+        infoimgs.push(igurl);
+      }
+      if(ihurl != "url") {
+        infoimgs.push(ihurl);
+      }
+
+
+
+      if(burl != "url") {
+        carousels.push(burl);
+      }
+      if(curl != "url") {
+        carousels.push(curl);
+      }
+      if(durl != "url") {
+        carousels.push(durl);
+      }
+      if(eurl != "url") {
+        carousels.push(eurl);
+      }
+      if(furl != "url") {
+        carousels.push(furl);
+      }
+      if(gurl != "url") {
+        carousels.push(gurl);
+      }
+      if(hurl != "url") {
+        carousels.push(hurl);
+      }
+
+      var prdkey = firebase.database().ref("AllProduct/").push().key;
+
+      //Write full Products
+      firebase.database().ref("AllProduct/" + prdkey + '/').update({
+        productID: pid,
+        productName: pname,
+        productSubDetail: psub,
+        productPrice: pprice,
+        productPackageInfo: ppackinfo,
+        productSuppler: psuppler,
+        productRefundable: isrefundable,
+        productImages: carousels,
+        productInfoImages: infoimgs,
+        prodcutCS: cors,
+        prodcutCSQty: num
+      });
+      //Write to each category short version
+      firebase.database().ref("Each_Category/" + cate + '/' + prdkey + '/').update({
+        productName: pname,
+        productSubDetail: psub,
+        productPrice: pprice,
+        productMainImage: aurl,
+      });
+      //Write to each suppler
+      firebase.database().ref("Each_Suppler/" + psuppler + '/' + prdkey + '/').update({
+        productName: pname,
+        productSubDetail: psub,
+        productPrice: pprice,
+        productMainImage: aurl,
+      });
+
+
+
+
+    }
+
+    function uploadCarouselImages(s, p, prg) {
+      //alert("This browser does not support HTML5 FileReader.");
+      //var fileUpload = document.getElementById("prdCarousel");
+      var fileUpload = document.getElementById(s);
+      var pp = document.getElementById(p);
+      var jd = document.getElementById(prg);
+      //var dvPreview = document.getElementById("prdurls");
+      var category = document.getElementById("categories").value;
+      //dvPreview.innerHTML = "";
+      var file = fileUpload.files[0];
+      var uploadTask = firebase.storage().ref('ProductImages/' + category + '/' + Date.now() + file.name).put(file, {'contentType': file.type});
+      uploadTask.on('state_changed', function(snapshot){
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        jd.value = progress;
+        //console.log('Upload is ' + progress + '% done');
+        }, function(error) {
+          }, function() {
+              var downloadURL = uploadTask.snapshot.downloadURL;
+              //var url = document.createElement("P");
+              pp.innerHTML = downloadURL
+              //var t = document.createTextNode(downloadURL);
+              //pp.appendChild(t);
+              //dvPreview.appendChild(url);
+            });
+    }
+
+    function uploadSupplerIcon(s, p, prg) {
+      //alert("This browser does not support HTML5 FileReader.");
+      //var fileUpload = document.getElementById("prdCarousel");
+      var fileUpload = document.getElementById(s);
+      var pp = document.getElementById(p);
+      var jd = document.getElementById(prg);
+      //var dvPreview = document.getElementById("prdurls");
+      var category = document.getElementById("categories").value;
+      //dvPreview.innerHTML = "";
+      var file = fileUpload.files[0];
+      var uploadTask = firebase.storage().ref('SupplerIcons/' + file.name).put(file, {'contentType': file.type});
+      uploadTask.on('state_changed', function(snapshot){
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        jd.value = progress;
+        //console.log('Upload is ' + progress + '% done');
+        }, function(error) {
+          }, function() {
+              var downloadURL = uploadTask.snapshot.downloadURL;
+              //var url = document.createElement("P");
+              pp.innerHTML = downloadURL
+              //var t = document.createTextNode(downloadURL);
+              //pp.appendChild(t);
+              //dvPreview.appendChild(url);
+            });
+    }
+
+    function saveSuppler() {
+
+      var sName = document.getElementById('supplerName').value;
+      var sDes = document.getElementById('supplerDes').value;
+      var sIconUrl = document.getElementById('iconUrl').innerHTML;
+
+      firebase.database().ref('Supplers/').push({
+        supplerName: sName,
+        supplerDes: sDes,
+        supplerIconUrl: sIconUrl
+      });
+    }
+
+    function displayCarouselImages(s, t) {
+      var fileUpload = document.getElementById(s);
+      if (typeof (FileReader) != "undefined") {
+          var dvPreview = document.getElementById(t);
+          dvPreview.innerHTML = "";
+          var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+          var file = fileUpload.files[0];
+          if (regex.test(file.name.toLowerCase())) {
+               var reader = new FileReader();
+               reader.onload = function (e) {
+                  dvPreview.src = e.target.result;
+                }
+               reader.readAsDataURL(file);
+              } else {
+                  alert(file.name + " is not a valid image file.");
+                  dvPreview.innerHTML = "";
+                  return false;
+              }
+      } else {
+          alert("This browser does not support HTML5 FileReader.");
+      }
+    }
+
+    function addCS() {
+      var colorsize = document.getElementById('colorSize').value;
+      var colorsizeQty = document.getElementById('eachQty').value;
+
+      var csUl = document.getElementById('cs');
+      var csQtyUl = document.getElementById('csQty');
+
+      var lqcs = document.createElement('li');
+      lqcs.appendChild(document.createTextNode(colorsize));
+      csUl.appendChild(lqcs);
+
+      var lqQty = document.createElement('li');
+      lqQty.appendChild(document.createTextNode(colorsizeQty));
+      csQtyUl.appendChild(lqQty);
+    }
+
+
+    function displayCarouselImagess() {
+      var fileUpload = document.getElementById("prdCarousel");
+      if (typeof (FileReader) != "undefined") {
+          var dvPreview = document.getElementById("carouselPreview");
+          dvPreview.innerHTML = "";
+          var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+          for (var i = 0; i < fileUpload.files.length; i++) {
+              var file = fileUpload.files[i];
+              if (regex.test(file.name.toLowerCase())) {
+                  var reader = new FileReader();
+                  reader.onload = function (e) {
+                      var img = document.createElement("IMG");
+                      img.height = "100";
+                      img.width = "100";
+                      img.src = e.target.result;
+                      dvPreview.appendChild(img);
+                  }
+                  reader.readAsDataURL(file);
+              } else {
+                  alert(file.name + " is not a valid image file.");
+                  dvPreview.innerHTML = "";
+                  return false;
+              }
+          }
+      } else {
+          alert("This browser does not support HTML5 FileReader.");
+      }
+    }
+    /**
+     * Handles the sign up button press.
+     */
+    function handleSignUp() {
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
+      if (email.length < 4) {
+        alert('Please enter an email address.');
+        return;
+      }
+      if (password.length < 4) {
+        alert('Please enter a password.');
+        return;
+      }
+      // Sign in with email and pass.
+      // [START createwithemail]
+      firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // [START_EXCLUDE]
+        if (errorCode == 'auth/weak-password') {
+          alert('The password is too weak.');
+        } else {
+          alert(errorMessage);
+        }
+        console.log(error);
+        // [END_EXCLUDE]
+      });
+      // [END createwithemail]
+    }
+    function initApp() {
+      // Listening for auth state changes.
+      // [START authstatelistener]
+      firebase.auth().onAuthStateChanged(function(user) {
+        // [START_EXCLUDE silent]
+        document.getElementById('quickstart-verify-email').disabled = true;
+        // [END_EXCLUDE]
+        if (user) {
+          // User is signed in.
+          var displayName = user.displayName;
+          var email = user.email;
+          var emailVerified = user.emailVerified;
+          var photoURL = user.photoURL;
+          var isAnonymous = user.isAnonymous;
+          var uid = user.uid;
+          var providerData = user.providerData;
+          // [START_EXCLUDE silent]
+          document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
+          document.getElementById('quickstart-sign-in').textContent = 'Sign out';
+          document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
+          if (!emailVerified) {
+            document.getElementById('quickstart-verify-email').disabled = false;
+          }
+          // [END_EXCLUDE]
+        } else {
+          // User is signed out.
+          // [START_EXCLUDE silent]
+          document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
+          document.getElementById('quickstart-sign-in').textContent = 'Sign in';
+          document.getElementById('quickstart-account-details').textContent = 'null';
+          // [END_EXCLUDE]
+        }
+        // [START_EXCLUDE silent]
+        document.getElementById('quickstart-sign-in').disabled = false;
+        // [END_EXCLUDE]
+      });
+      // [END authstatelistener]
+      document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
+      document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
+      //document.getElementById('quickstart-verify-email').addEventListener('click', sendEmailVerification, false);
+      //document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);
+      //document.getElementById('quickstart-uploadCarousel').addEventListener('click', handleSignUp, false);
+    }
+    window.onload = function() {
+      initApp();
+      var sel = document.getElementById('sup');
+      var selCate = document.getElementById('categories');
+      var categoryRef = firebase.database().ref().child("ProductCategory");
+      var supplerRef = firebase.database().ref().child("Supplers");
+      supplerRef.on('child_added', snap => {
+        var opt = document.createElement('option');
+        opt.innerHTML = snap.val().supplerName;
+        opt.value = snap.key;
+        sel.appendChild(opt);
+      });
+      categoryRef.on('child_added', snap => {
+        var opt = document.createElement('option');
+        opt.innerHTML = snap.val();
+        opt.value = snap.val();
+        selCate.appendChild(opt);
+      });
+    };
+  </script>
+</head>
+<body>
+<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+  <!-- Header section containing title -->
+  <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+    <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
+        <a href="/"><h3>Aomai</h3></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="mdl-layout__content mdl-color--grey-100">
+    <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+
+      <!-- Container for the demo -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+        <div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">
+          <h2 class="mdl-card__title-text">Upload Product &amp; More</h2>
+        </div>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <input class="mdl-textfield__input" style="display:inline;width:auto;" type="text" id="email" name="email" placeholder="Email"/>
+          &nbsp;&nbsp;&nbsp;
+          <input class="mdl-textfield__input" style="display:inline;width:auto;" type="password" id="password" name="password" placeholder="Password"/>
+          <br/><br/>
+          <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-in" name="signin">Sign In</button>
+          &nbsp;&nbsp;&nbsp;
+          <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-up" name="signup">Sign Up</button>
+          &nbsp;&nbsp;&nbsp;
+          <button class="mdl-button mdl-js-button mdl-button--raised" disabled id="quickstart-verify-email" name="verify-email">Send Email Verification</button>
+          &nbsp;&nbsp;&nbsp;
+          <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-password-reset" name="verify-email">Send Password Reset Email</button>
+          <br/><br/><br/><br/>
+          <hr/>
+          <input onchange="displayCarouselImages('supplerAvatar', 'supplerIcon')" id="supplerAvatar" type="file" /><br>
+          <img id="supplerIcon" src="placeholder.png" alt="Suppler Icon" height="120" width="120"> <br>
+          <button onclick="uploadSupplerIcon('supplerAvatar', 'iconUrl', 'prpgIcon')" class="mdl-button mdl-js-button mdl-button--raised">Upload Suppler Icon</button><br>
+          <progress id="prpgIcon" value="0" max="100"></progress>
+          <p id = "iconUrl"></p>
+          <input class="mdl-textfield__input" style="display:inline;width:auto;" type="text" id="supplerName" name="name" placeholder="Suppler Name"/>
+          <br/><br/>
+          <input class="mdl-textfield__input" style="display:inline;width:auto;" type="text" id="supplerDes" name="des" placeholder="Suppler Description"/>
+          <br/><br/>
+          <button onclick="saveSuppler()" class="mdl-button mdl-js-button mdl-button--raised">SAVE SUPPLER</button><br>
+
+          <hr/>
+          <!-- Product Info Form -->
+          Select Suppler :
+          <select id="sup">
+          </select>
+          <br/><br/>
+          Select Category :
+          <select id="categories">
+          </select>
+          <br/><br/>
+          <form id= "prd-form">
+            <input class="mdl-textfield__input" style="display:inline;width:auto;" type="text" id="pID" name="id" placeholder="ID"/>
+            <br/><br/>
+            <input class="mdl-textfield__input" style="display:inline" width="40" type="text" id="pName" name="name" placeholder="Name"/>
+            <br/><br/>
+            <input class="mdl-textfield__input" style="display:inline" width="40" type="text" id="pSub" name="subname" placeholder="Short Description"/>
+            <br/><br/>
+            <input class="mdl-textfield__input" style="display:inline;width:auto;" type="text" id="pPrice" name="price" placeholder="Price"/>
+            <br/><br/>
+            <input class="mdl-textfield__input" style="display:inline" width="40" type="text" id="pPackageInfo" name="packageinfo" placeholder="Package Info"/>
+            <br/><br/>
+
+          </form>
+          <form id="isRefundable">
+            <input type="radio" id="r1" name="refundable" value=true checked> Refundable<br>
+            <input type="radio" id="r2" name="refundable" value=false> Non Refundable<br>
+          </form>
+          <br/><br/>
+          <input class="mdl-textfield__input" style="display:inline" width="40" type="text" id="colorSize" name="packageinfo" placeholder="Color or Size"/>
+          <br/><br/>
+          <input class="mdl-textfield__input" style="display:inline" width="40" type="text" id="eachQty" name="packageinfo" placeholder="Quantity"/>
+          <button onclick="addCS()" class="mdl-button mdl-js-button mdl-button--raised">ADD COLOR OR SIZE</button><br><br><br>
+          <br/><br/>
+          <ul id = "cs">
+          </ul>
+          <ul id = "csQty">
+          </ul>
+          <div>
+            <hr/>
+            <button onclick="saveprd()" class="mdl-button mdl-js-button mdl-button--raised">Save Product</button><br><br><br>
+            <b>Images Urls</b>
+            <br/><br/>
+            <div id="prdurls">
+              <h3>Main Image Url</h3>
+              <p id='pmain'>url</p>
+              <h3>Second Image Url</h3>
+              <p id='p2'>url</p>
+              <h3>Third Image Url</h3>
+              <p id='p3'>url</p>
+              <h3>Forth Image Url</h3>
+              <p id='p4'>url</p>
+              <h3>Fifth Image Url</h3>
+              <p id='p5'>url</p>
+              <h3>Sixth Image Url</h3>
+              <p id='p6'>url</p>
+              <h3>Seventh Image Url</h3>
+              <p id='p7'>url</p>
+              <h3>Eighth Image Url</h3>
+              <p id='p8'>url</p>
+            </div>
+          </div>
+          <div class="container">
+          <div class="row">
+            <div class="col-sm-3">
+              <input onchange="displayCarouselImages('maincarousel','mainimg')" id="maincarousel" type="file" /><br>
+        	  <img id="mainimg" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+              <button onclick="uploadCarouselImages('maincarousel', 'pmain', 'pmainprg')" class="mdl-button mdl-js-button mdl-button--raised">Upload Main Carousel Image</button><br>
+        	   <progress id="pmainprg" value="0" max="100"></progress>
+        	  <hr/>
+            </div>
+            <div class="col-sm-3">
+              <input onchange="displayCarouselImages('aaa', 'aimg')" id="aaa" type="file" /><br>
+        	  <img id="aimg" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+              <button onclick="uploadCarouselImages('aaa', 'p2', 'pa')" class="mdl-button mdl-js-button mdl-button--raised">Upload Second Carousel Image</button><br>
+        	  <progress id="pa" value="0" max="100"></progress>
+        	  <hr/>
+            </div>
+            <div class="col-sm-3">
+              <input onchange="displayCarouselImages('bbb', 'bimg')" id="bbb" type="file" /><br>
+        	  <img id="bimg" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+             <button onclick="uploadCarouselImages('bbb', 'p3', 'pb')" class="mdl-button mdl-js-button mdl-button--raised">Upload Third Carousel Image</button><br>
+        	 <progress id="pb" value="0" max="100"></progress>
+        	 <hr/>
+            </div>
+        	<div class="col-sm-3">
+              <input onchange="displayCarouselImages('ccc', 'cimg')" id="ccc" type="file" /><br>
+        	  <img id="cimg" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+              <button onclick="uploadCarouselImages('ccc', 'p4', 'pc')" class="mdl-button mdl-js-button mdl-button--raised">Upload Forth Carousel Image</button><br>
+        	  <progress id="pc" value="0" max="100"></progress>
+        	  <hr/>
+            </div>
+            <div class="col-sm-3">
+              <input onchange="displayCarouselImages('ddd', 'dimg')" id="ddd" type="file" /><br>
+        	  <img id="dimg" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+              <button onclick="uploadCarouselImages('ddd', 'p5', 'pd')" class="mdl-button mdl-js-button mdl-button--raised">Upload Fifth Carousel Image</button><br>
+        	  <progress id="pd" value="0" max="100"></progress>
+        	  <hr/>
+            </div>
+            <div class="col-sm-3">
+              <input onchange="displayCarouselImages('eee', 'eimg')" id="eee" type="file" /><br>
+        	  <img id="eimg" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+             <button onclick="uploadCarouselImages('eee', 'p6', 'pe')" class="mdl-button mdl-js-button mdl-button--raised">Upload Sixth Carousel Image</button><br>
+        	 <progress id="pe" value="0" max="100"></progress>
+        	 <hr/>
+            </div>
+        	<div class="col-sm-3">
+              <input onchange="displayCarouselImages('fff', 'fimg')" id="fff" type="file" /><br>
+        	  <img id="fimg" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+              <button onclick="uploadCarouselImages('fff', 'p7', 'pf')" class="mdl-button mdl-js-button mdl-button--raised">Upload Seventh Carousel Image</button><br>
+        	  <progress id="pf" value="0" max="100"></progress>
+        	  <hr/>
+            </div>
+            <div class="col-sm-3">
+              <input onchange="displayCarouselImages('ggg', 'gimg')" id="ggg" type="file" /><br>
+        	  <img id="gimg" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+             <button onclick="uploadCarouselImages('ggg', 'p8', 'pg')" class="mdl-button mdl-js-button mdl-button--raised">Upload Eighth Carousel Image</button><br>
+        	 <progress id="pg" value="0" max="100"></progress>
+        	 <hr/>
+            </div>
+          </div>
+        </div>
+
+        <p>Information Images</p>
+        <br/><br/>
+        <div id="prdurls">
+          <h3>Info Image Url 1</h3>
+          <p id='pinfo1'>url</p>
+          <h3>Info Image Url 2</h3>
+          <p id='pinfo2'>url</p>
+          <h3>Info Image Url 3</h3>
+          <p id='pinfo3'>url</p>
+          <h3>Info Image Url 4</h3>
+          <p id='pinfo4'>url</p>
+          <h3>Info Image Url 5</h3>
+          <p id='pinfo5'>url</p>
+          <h3>Info Image Url 6</h3>
+          <p id='pinfo6'>url</p>
+          <h3>Info Image Url 7</h3>
+          <p id='pinfo7'>url</p>
+          <h3>Info Image Url 8</h3>
+          <p id='pinfo8'>url</p>
+        </div>
+        <div class="container">
+        <div class="row">
+          <div class="col-sm-3">
+            <input onchange="displayCarouselImages('info1','infoa')" id="info1" type="file" /><br>
+          <img id="infoa" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+            <button onclick="uploadCarouselImages('info1', 'pinfo1', 'infoaprg')" class="mdl-button mdl-js-button mdl-button--raised">Upload Info Image 1</button><br>
+           <progress id="infoaprg" value="0" max="100"></progress>
+          <hr/>
+          </div>
+          <div class="col-sm-3">
+            <input onchange="displayCarouselImages('info2', 'infob')" id="info2" type="file" /><br>
+          <img id="infob" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+            <button onclick="uploadCarouselImages('info2', 'pinfo2', 'infobprg')" class="mdl-button mdl-js-button mdl-button--raised">Upload Info Image 2</button><br>
+          <progress id="infobprg" value="0" max="100"></progress>
+          <hr/>
+          </div>
+          <div class="col-sm-3">
+            <input onchange="displayCarouselImages('info3', 'infoc')" id="info3" type="file" /><br>
+          <img id="infoc" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+           <button onclick="uploadCarouselImages('info3', 'pinfo3', 'infocprg')" class="mdl-button mdl-js-button mdl-button--raised">Upload Info Image 3</button><br>
+         <progress id="infocprg" value="0" max="100"></progress>
+         <hr/>
+          </div>
+        <div class="col-sm-3">
+            <input onchange="displayCarouselImages('info4', 'infod')" id="info4" type="file" /><br>
+          <img id="infod" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+            <button onclick="uploadCarouselImages('info4', 'pinfo4', 'infodprg')" class="mdl-button mdl-js-button mdl-button--raised">Upload Info Image 4</button><br>
+          <progress id="infodprg" value="0" max="100"></progress>
+          <hr/>
+          </div>
+          <div class="col-sm-3">
+            <input onchange="displayCarouselImages('info5', 'infoe')" id="info5" type="file" /><br>
+          <img id="infoe" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+            <button onclick="uploadCarouselImages('info5', 'pinfo5', 'infoeprg')" class="mdl-button mdl-js-button mdl-button--raised">Upload Info Image 5</button><br>
+          <progress id="infoeprg" value="0" max="100"></progress>
+          <hr/>
+          </div>
+          <div class="col-sm-3">
+            <input onchange="displayCarouselImages('info6', 'infof')" id="info6" type="file" /><br>
+          <img id="infof" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+           <button onclick="uploadCarouselImages('info6', 'pinfo6', 'infofprg')" class="mdl-button mdl-js-button mdl-button--raised">Upload Info Image 6</button><br>
+         <progress id="infofprg" value="0" max="100"></progress>
+         <hr/>
+          </div>
+        <div class="col-sm-3">
+            <input onchange="displayCarouselImages('info7', 'infog')" id="info7" type="file" /><br>
+          <img id="infog" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+            <button onclick="uploadCarouselImages('info7', 'pinfo7', 'infogprg')" class="mdl-button mdl-js-button mdl-button--raised">Upload Info Image 7</button><br>
+          <progress id="infogprg" value="0" max="100"></progress>
+          <hr/>
+          </div>
+          <div class="col-sm-3">
+            <input onchange="displayCarouselImages('info8', 'infoh')" id="info8" type="file" /><br>
+          <img id="infoh" src="placeholder.png" alt="Main Image" height="160" width="160"> <br>
+           <button onclick="uploadCarouselImages('info8', 'pinfo8', 'infohprg')" class="mdl-button mdl-js-button mdl-button--raised">Upload Info Image 8</button><br>
+         <progress id="infohprg" value="0" max="100"></progress>
+         <hr/>
+          </div>
+        </div>
+      </div>
+          <!-- Container where we'll display the user details -->
+          <div class="quickstart-user-details-container">
+            Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
+            <div>Firebase auth <code>currentUser</code> object value:</div>
+            <pre><code id="quickstart-account-details">null</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
